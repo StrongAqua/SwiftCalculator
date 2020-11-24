@@ -15,6 +15,7 @@
 		FE90DFCE25542EE200B8D5F6 /* CalcSwift.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FE90DFCC25542EE200B8D5F6 /* CalcSwift.xcdatamodeld */; };
 		FE90DFD025542EE500B8D5F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE90DFCF25542EE500B8D5F6 /* Assets.xcassets */; };
 		FE90DFD325542EE500B8D5F6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE90DFD125542EE500B8D5F6 /* LaunchScreen.storyboard */; };
+		FEF0E9BC255ED10E00BC73BE /* MemoryStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF0E9BB255ED10E00BC73BE /* MemoryStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		FE90DFCF25542EE500B8D5F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE90DFD225542EE500B8D5F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FE90DFD425542EE500B8D5F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FEF0E9BB255ED10E00BC73BE /* MemoryStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				FE90DFC325542EE200B8D5F6 /* AppDelegate.swift */,
 				FE90DFC525542EE200B8D5F6 /* SceneDelegate.swift */,
 				FE90DFC725542EE200B8D5F6 /* ViewController.swift */,
+				FEF0E9BB255ED10E00BC73BE /* MemoryStack.swift */,
 				FE90DFC925542EE200B8D5F6 /* Main.storyboard */,
 				FE90DFCF25542EE500B8D5F6 /* Assets.xcassets */,
 				FE90DFD125542EE500B8D5F6 /* LaunchScreen.storyboard */,
@@ -100,7 +103,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = Alla;
 				TargetAttributes = {
 					FE90DFBF25542EE200B8D5F6 = {
@@ -147,6 +150,7 @@
 				FE90DFC825542EE200B8D5F6 /* ViewController.swift in Sources */,
 				FE5B10EC255C235F00DE666A /* FuturePromise.swift in Sources */,
 				FE90DFC425542EE200B8D5F6 /* AppDelegate.swift in Sources */,
+				FEF0E9BC255ED10E00BC73BE /* MemoryStack.swift in Sources */,
 				FE90DFCE25542EE200B8D5F6 /* CalcSwift.xcdatamodeld in Sources */,
 				FE90DFC625542EE200B8D5F6 /* SceneDelegate.swift in Sources */,
 			);
@@ -200,6 +204,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -260,6 +265,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

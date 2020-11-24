@@ -8,18 +8,32 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var result: UILabel!
+    @IBOutlet weak var memoryTable: UITableView!
+    
     var firstNum: Double = 0
     var secondNum: Double = 0
-    var operation: Int = 0
+    var operation: String?
     var startTyping: Bool = true
     var dotIsPressed: Bool = false
+    var memory: [Example] = []
+    let maxInputCount = 15
+    let cellReuseIdentifier = "cell"
     
     var currentInput: Double {
         get {
-            return Double(result.text!)!
+            guard let text = result.text else {
+                fatalError("ERROR: void input!")
+            }
+            if isOperation(text) {
+                return firstNum
+            }
+            guard let result = Double(text) else {
+                fatalError("ERROR: not a number!")
+            }
+            return result
         }
         
         set {
@@ -34,97 +48,165 @@ class ViewController: UIViewController {
         }
     }
     
-    
     @IBAction func digits(_ sender: UIButton) {
         
-        let textCount = result.text!.count
+        let text = result.text ?? ""
+        let textCount = text.count
         
         if startTyping == true {
             result.text = String(sender.tag)
             startTyping = false
-            
         } else {
-            if textCount < 15 {
-                result.text = result.text! + String(sender.tag)
+            if textCount < maxInputCount {
+                result.text = text + String(sender.tag)
             }
         }
         
+    }
+    
+    func isOperation(_ input: String) -> Bool {
+        switch input {
+            case "/", "x", "-", "+":
+                return true
+            default: return false
+        }
     }
     
     @IBAction func buttons(_ sender: UIButton) {
-        if result.text != "" && sender.tag != 10 && sender.tag != 15 {
-            firstNum = currentInput
+
+        guard let title = sender.currentTitle,
+                  title.isEmpty == false
+        else { return }
+
+        repeat {
+
+            if isOperation(title)
+            {
+                if operation == nil {
+                    firstNum = currentInput
+                }
+                result.text = title
+                operation = title
+                startTyping = true
+                dotIsPressed = false
+                break
+            }
             
-            if sender.tag == 11 {
-                result.text = "/"
+            if title == "=" {
+                guard let operation = self.operation else { return }
+                secondNum = currentInput
+                if operation == "/" && secondNum.isZero {
+                    clearState("E")
+                    return
+                }
+                switch operation {
+                    case "/": currentInput = firstNum / secondNum
+                    case "x": currentInput = firstNum * secondNum
+                    case "-": currentInput = firstNum - secondNum
+                    case "+": currentInput = firstNum + secondNum
+                    default:
+                    fatalError("ERROR: unknown operation!")
+                }
+                let example = Example(firstNum: firstNum, secondNum: secondNum, operation: operation, result: currentInput)
+                memory.append(example)
+                memoryTable.reloadData()
+                startTyping = true
+                self.operation = nil
+                break
             }
-            else if sender.tag == 12 {
-                result.text = "x"
-            }
-            else if sender.tag == 13 {
-                result.text = "-"
-            }
-            else if sender.tag == 14 {
-                result.text = "+"
+                
+            if title == "C" {
+                clearState("0")
+                break
             }
             
-            operation = sender.tag
-            startTyping = true
-            dotIsPressed = false
-        }
-        else if sender.tag == 15 {
-            secondNum = currentInput
-            if operation == 11 {
-                currentInput =  firstNum / secondNum
-            }
-            else if operation == 12 {
-                currentInput =  firstNum * secondNum
-            }
-            else if operation == 13 {
-                currentInput = firstNum - secondNum
-            }
-            else if operation == 14 {
-                currentInput = firstNum + secondNum
-            }
-            startTyping = true
-        }
-        else if sender.tag == 10 {
-            startTyping = true
-            result.text = "0"
-            firstNum = 0
-            secondNum = 0
-            operation = 0
-            dotIsPressed = false
-            
-        }
+        } while( false )
     }
     
+    func clearState(_ text: String) {
+        startTyping = true
+        result.text = text
+        firstNum = 0
+        secondNum = 0
+        operation = nil
+        dotIsPressed = false
+    }
     
     @IBAction func plusMinusButtonPressed(_ sender: UIButton) {
         currentInput = -currentInput
-        
     }
     
     @IBAction func squareButtonPressed(_ sender: UIButton) {
-        currentInput = sqrt(currentInput)
-        
+        let result = sqrt(currentInput)
+        let example = Example(firstNum: currentInput, operation: sender.titleLabel?.text ?? "E", result: result)
+        currentInput = result
+        memory.append(example)
+        memoryTable.reloadData()
+        startTyping = true
     }
     
     @IBAction func dotButtonPressed(_ sender: UIButton) {
-        if startTyping == false && !dotIsPressed {
-            result.text = result.text! + "."
-            dotIsPressed = true
-        } else if  startTyping == true && !dotIsPressed {
-            result.text = "0."
-        }
+        if dotIsPressed == true { return }
+        
+        result.text = startTyping
+            ? "0."
+            : result.text! + "."
+        
+        startTyping = false
+        dotIsPressed = true
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        // Register the table view cell class and its reuse id
+        self.memoryTable.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        // (optional) include this line if you want to remove the extra empty cell divider lines
+        // self.tableView.tableFooterView = UIView()
+        // This view controller itself will provide the delegate methods and row data for the table view.
+        memoryTable.delegate = self
+        memoryTable.dataSource = self
+        memoryTable.transform = CGAffineTransform(scaleX: 1, y: -1)
     }
     
+    // number of rows in table view
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.memory.count
+    }
     
+    // create a cell for each table view row
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // create a new cell if needed or reuse an old one
+        guard
+          let cell = self.memoryTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier),
+          let cellLabel = cell.textLabel
+        else { return UITableViewCell() }
+        
+        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+        cell.backgroundColor = .black
+        
+        let element = memory[memory.count - indexPath.row - 1]
+        cellLabel.textColor = UIColor.white
+        cellLabel.textAlignment = .right
+        let secondNum = (element.secondNum == nil) ? "" : String(element.secondNum ?? 0.0)
+        cellLabel.text = "\(element.firstNum) \(element.operation) \(secondNum) = \(element.result)"
+        
+        return cell
+    }
+    
+    // method to run when table view cell is tapped
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("You tapped cell number \(indexPath.row).")
+        let element = memory[memory.count - indexPath.row - 1]
+        result.text = String(element.result)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 22
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 22
+    }
 }
+
 

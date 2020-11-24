@@ -83,11 +83,11 @@ class TaskSelfRunner {
         
         let boss = Boss()
         
-        let worker1 = Employee(boss.payMoney)
-        let worker2 = Employee(boss.payMoney)
+        let _ = Employee(boss.payMoney)
+        let _ = Employee(boss.payMoney)
         
-        // boss.doPayMoney(1000)
-        boss.doNotPayMoney()
+        boss.doPayMoney(1000)
+        //boss.doNotPayMoney()
         
     }
     
